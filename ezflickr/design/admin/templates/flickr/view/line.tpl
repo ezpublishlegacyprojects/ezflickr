@@ -1,0 +1,1 @@
+<a href={$flobject.url_alias|ezurl()}>{$flobject.name|wash()}</a>
