@@ -28,6 +28,9 @@ class eZFlickrConnect {
     const METHOD_PHOTOS_GETRECENT       = "flickr.photos.getRecent";
     const METHOD_PHOTOS_RECENTLYUPDATED = "flickr.photos.recentlyUpdated";
 
+    //constant for token prefence (eZPreference)
+    const PREF_TOKEN                    = "ezflickr_token";
+
     /**
      * constructor
      *
@@ -49,7 +52,7 @@ class eZFlickrConnect {
      * @param eZModule $Module
      * @return eZFlickrConnect
      */
-    static function instance()
+    static function instance($connectionProcess=false)
     {
         static $instance=false;
         /*if (!$instance && !$Module) {
@@ -64,7 +67,7 @@ class eZFlickrConnect {
             $instance = new eZFlickrConnect($Module);
         }
 
-        if ($instance->connectionRequired())
+        if ($instance->connectionRequired() && !$connectionProcess)
         {
             throw new eZFlickrConnectionRequiredException();
         }
@@ -80,17 +83,18 @@ class eZFlickrConnect {
      * @param array $params method parameters (without method name, format, api key)
      * @return array
      */
-    function callMethod($method,$params=array())
+    function callMethod($method,$params=array(),$anonymous=false)
     {
         $returnTab=array();
-        if (!$this->connectionRequired || $method==self::METHOD_AUTH_GETTOKEN)
+        if (!$this->connectionRequired || $anonymous)
         {
             $params["method"]=$method;
             $params["format"]="php_serial";
-            if ($method!=self::METHOD_AUTH_GETTOKEN)
+            if (!$anonymous) {
                 $params["auth_token"]=$this->getToken();
-            $url = $this->getSignedUrl($params);
+            }
 
+            $url = $this->getSignedUrl($params);
             $returnValue = file_get_contents($url);
             $returnTab = unserialize($returnValue);
             //Test $returnTab["stat"]=fail -- $returnTab["message"] && code
@@ -143,10 +147,14 @@ class eZFlickrConnect {
     function connect()
     {
         $ezhttp = new eZHttpTool();
-        if ($ezhttp->hasVariable("frob"))
+        if ($ezhttp->hasSessionVariable("ezflickrfrob"))
         {
             //Second part of authetification : we have frob information, we try to get authToken
-            $result = $this->callMethod(self::METHOD_AUTH_GETTOKEN,array("frob"=>$ezhttp->variable("frob")));
+            $result = $this->callMethod(self::METHOD_AUTH_GETTOKEN,array("frob"=>$ezhttp->sessionVariable("ezflickrfrob")),true);
+
+            //remove frob from session
+            $ezhttp->removeSessionVariable("ezflickrfrob");
+
             if (isset($result["auth"]))
             {
                 $this->setFlickrAuth(new eZFlickrAuth($result["auth"]));
@@ -155,24 +163,56 @@ class eZFlickrConnect {
             }
 
         }
-        //get flickrAuth class or session
-        /*$flickrAuth = $this->getFlickrAuth();
 
-        if ($flickrAuth)
+        //We don't have flick authetification, we test token stored in user preferences
+        if (!$this->getFlickrAuth())
         {
-            //check token
-            $result = $this->callMethod(self::METHOD_AUTH_CHECKTOKEN);
-        }*/
+            //Try to get token from eZPreference
+            $prefToken = eZPreferences::value(eZFlickrConnect::PREF_TOKEN);
+
+            if ($prefToken) {
+                $params=array("auth_token"=>$prefToken);
+                $result = $this->callMethod(self::METHOD_AUTH_CHECKTOKEN,$params,true);
+
+                if (isset($result["auth"]))
+                {
+                    $this->setFlickrAuth(new eZFlickrAuth($result["auth"]));
+                } else {
+                    eZPreferences::setValue(eZFlickrConnect::PREF_TOKEN,false);
+                }
+            }
+        }
 
         //if we still don't have auth, redirect to flickr connection
         if (!$this->getFlickrAuth())
         {
             //connect user
-            $AuthUrl = $this->getSignedUrl(array('perms'=>'read'),true);
-            $this->Module->redirectTo($AuthUrl);
+            if (eZModule::currentModule()!="flickr" || eZModule::currentView()!="connect") {
+                $this->Module->redirectTo("flickr/connect");
+            }
         } else {
             $this->connectionRequired=false;
         }
+    }
+
+    /**
+     * return the authentification URL for connection
+     *
+     * @return string URL
+     */
+    function getAuthetificationURL()
+    {
+        //Get a new frob
+        $callResult = $this->callMethod(self::METHOD_AUTH_GETFROB,array(),false);
+
+        if (!isset($callResult["frob"])) {
+            throw new eZFlickrException();
+        }
+
+        $frob = $callResult["frob"]["_content"];
+        $ezhttp = new eZHttpTool();
+        $ezhttp->setSessionVariable('ezflickrfrob',$frob);
+        return $this->getSignedUrl(array('perms'=>'read','frob'=>$frob),true);
     }
 
     /**

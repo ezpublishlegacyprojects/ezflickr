@@ -8,6 +8,7 @@ class eZFlickrAuth {
         if (isset($flickAuthArray["token"]))
         {
             $this->Token=$flickAuthArray["token"]["_content"];
+            eZPreferences::setValue(eZFlickrConnect::PREF_TOKEN,$this->Token);
         }
 
         if (isset($flickAuthArray["perms"]))

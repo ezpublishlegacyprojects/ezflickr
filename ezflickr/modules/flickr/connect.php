@@ -26,8 +26,27 @@
 
 
 $Module = $Params["Module"];
-$flickrConnect = eZFlickrConnect::instance($Module);
-$Module->redirectToView("home");
+$flickrConnect = eZFlickrConnect::instance(true);
+
+if (!$flickrConnect->connectionRequired()) {
+    $Module->redirectToView("home");
+    return;
+}
+
+include_once( 'kernel/common/template.php' );
+$tpl = templateInit();
+$tpl->setVariable("view_parameters",$Params["UserParameters"]);
+$tpl->setVariable("flikr_url_auth",$flickrConnect->getAuthetificationURL());
+
+$Result['path']=array(
+                        array(    'text' =>  ezi18n( 'flickr/main', 'Flickr Library' ),
+                                   'url' => false ),
+                        array(    'text' =>  ezi18n( 'flickr/main', 'Connection' ),
+                                   'url' => false )
+                        );
+
+$Result['content']=$tpl->fetch("design:flickr/connect.tpl");
+
 
 
 ?>

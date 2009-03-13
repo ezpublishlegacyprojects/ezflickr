@@ -76,7 +76,6 @@ class eZFlickrObject {
 
         if (!$class)
         {
-            die('oups 3');
             return false;
         }
 
@@ -91,21 +90,23 @@ class eZFlickrObject {
 
         //Create a local copy of the file (for import)
         $imageURL = $this->getBiggestImageURL();
-        $destFile = eZSys::cacheDirectory()."/".basename($imageURL);
+        $cacheDir = eZSys::cacheDirectory()."/ezflickr";
+        eZDir::mkdir($cacheDir);
+        $destFile = $cacheDir."/".basename($imageURL);
         eZFileHandler::copy($imageURL,$destFile);
 
         $dataMap[$fileAttribute]->fromString($destFile);
         $dataMap[$fileAttribute]->store();
 
         //remove local copy
-        //@unlink($destFile);
+        @unlink($destFile);
 
         //Publish
         $object->createNodeAssignment( $location, true );
         $operationResult = eZOperationHandler::execute( 'content', 'publish', array( 'object_id' => $object->attribute( 'id' ),
                                                                                      'version' => $publishVersion ) );
 
-
+        return true;
     }
 
 

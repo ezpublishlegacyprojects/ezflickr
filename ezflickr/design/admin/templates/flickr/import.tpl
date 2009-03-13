@@ -14,6 +14,7 @@ function FlickrImport()
     this.selectionCount={$flickrSelection|count()};
     this.selectionList= [];
     this.failureText="{"Import failures:"|i18n("flickr/main")}";
+    this.loaderImage={"flickr/ajax-loader-back.gif"|ezimage()};
     
 {foreach $flickrSelection as $selection}
 
@@ -24,13 +25,16 @@ function FlickrImport()
     this.finish = function() {
         var backURL = document.getElementById('backURL');
         backURL.style.display="block";
+        
+        var flickrAjasLoader = document.getElementById('uploadinprogress');
+        flickrAjasLoader.style.display = "none";
     }
 
     this.updateCount = function(){
 	    var imgFlickrStatus = document.getElementById('uploadstatusbarimage');
 	    var spanFlickrStatusText = document.getElementById('uploadstatustext');
         spanFlickrStatusText.innerHTML = this.imported+"/"+this.selectionCount;
-        imgFlickrStatus.style.width = Math.round(this.imported/this.selectionCount*200)+"px";
+        imgFlickrStatus.style.width = Math.round(this.imported/this.selectionCount*208)+"px";
         
         if (this.failures > 0)
         {
@@ -71,8 +75,9 @@ function FlickrImport()
         
         //hide launch button
         var flickrLaunchButton = document.getElementById('flickrLaunchButton');
-        flickrLaunchButton.style.display = "none";
-        
+        flickrLaunchButton.style.display =  "none";
+        var flickrUploadstatusbar = document.getElementById('uploadstatusbar');
+        flickrUploadstatusbar.style.background = "url('"+this.loaderImage+"') -5px -1px";
         
         for ( var i = 0; i < this.selectionList.length; i++ )
         {
@@ -83,8 +88,6 @@ function FlickrImport()
 
 }
 {/literal}
-
-
 
 var flImport = new FlickrImport();
 

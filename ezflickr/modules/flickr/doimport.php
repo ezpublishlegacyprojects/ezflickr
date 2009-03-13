@@ -13,20 +13,22 @@ $flickrSelectionID  = $Params["flickrSelectionID"];
 $parentNodeID       = $Params["parentNodeID"];
 $result = false;
 
-/*
- * get flickr selection
- */
-$selection          = eZFlickrSelection::fetch($flickrSelectionID);
-if($selection) {
-    $flickrElement = $selection->attribute("flickr_element");
-    if ($flickrElement && $flickrElement->attribute('type')==eZFlickrPhoto::TYPE) {
-        $flickrElement->createEZObject($parentNodeID);
-        $result=true;
+if ($flickrSelectionID && $parentNodeID) {
+    /*
+     * get flickr selection
+     */
+    $selection          = eZFlickrSelection::fetch($flickrSelectionID);
+    if($selection) {
+        $flickrElement = $selection->attribute("flickr_element");
+        if ($flickrElement && $flickrElement->attribute('type')==eZFlickrPhoto::TYPE) {
+            $result = $flickrElement->createEZObject($parentNodeID);
+        }
     }
 }
 
 if ($result)
 {
+    eZFlickrSelection::removeByID($flickrSelectionID);
     echo "ok";
 } else {
     echo "ko";
