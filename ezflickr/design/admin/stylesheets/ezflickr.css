@@ -1,0 +1,42 @@
+@CHARSET "UTF-8";
+
+div#ezflicr-import 
+{
+}
+
+	div#ezflicr-import div#uploadstatus 
+	{
+	    padding:10px;
+	}
+	
+	
+		div#ezflicr-import div#uploadstatus div#uploadstatusbar
+		{
+		    float:left;
+		    height:15px;
+		    width:200px;
+		    padding:1px;
+		    border:1px solid #697EDB;
+		    margin-right:10px;
+		}
+	
+		div#ezflicr-import div#uploadstatus span {
+			float:left;
+		    color:#697EDB;
+		    font-size:1.2em;
+		    font-weight:bold;
+		}
+		
+		div#ezflicr-import div#uploadstatus span.import-error {
+			float:left;
+			margin-left:5px;
+		    color:red;
+		    font-size:1.2em;
+		    font-weight:bold;
+		}
+		
+	div#ezflicr-import div#uploadcontrols
+	{
+	   clear:both;
+	   margin-top:20px;
+	}

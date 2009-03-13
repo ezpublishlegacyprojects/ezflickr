@@ -3,4 +3,7 @@
 [ExtensionSettings]
 DesignExtensions[]=ezflickr
 
+[StylesheetSettings]
+CSSFileList[]=ezflickr.css
+
 */ ?>

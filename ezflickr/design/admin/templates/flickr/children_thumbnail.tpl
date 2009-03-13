@@ -5,7 +5,7 @@
         <td width="25%">
             {flickr_view_gui view=thumbnail flobject=$child}
 	        <div class="controls">
-	            <input type="checkbox" name="ImportIDArray[]" value="{$child.ezflickr_id}" title="{'Use these checkboxes to select items for removal. Click the "Remove selected" button to remove the selected items.'|i18n( 'design/admin/node/view/full' )|wash()}" />
+	            <input type="checkbox" name="FlickrImportIDArray[]" value="{$child.ezflickr_id}" />
 		        <p><a href={$child.url_alias|ezurl}>{$child.name|wash()}</a></p>
 	        </div>
 		</td>

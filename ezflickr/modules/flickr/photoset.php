@@ -34,6 +34,16 @@ $tpl = templateInit();
 $tpl->setVariable("photoset",$photoset);
 $tpl->setVariable("view_parameters",$Params["UserParameters"]);
 
+$Result['path']=array(
+                        array(  'text' =>  ezi18n( 'flickr/main', 'Flickr Library' ),
+                                'url' => "flickr/home" ),
+                        array(  'text' =>  ezi18n( 'flickr/main', 'Photosets' ),
+                                'url' => "flickr/photosets" ),
+                        array(  'text' =>  $photoset->attribute("title"),
+                                'url' => false ),
+                        );
+
+
 $Result['content']=$tpl->fetch("design:flickr/photoset.tpl");
 
 

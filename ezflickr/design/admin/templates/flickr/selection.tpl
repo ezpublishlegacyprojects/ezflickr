@@ -1,4 +1,15 @@
+<form name="flickraction" action={"flickr/selection"|ezurl} method="post" enctype="multipart/form-data">
 
+
+{def    $item_type=ezpreference( 'flickr_list_limit' )
+        $number_of_items=min( $item_type, 3)|choose( 10, 10, 20, 30 )
+
+        $result=fetch('flickr','user_selection',hash(    'limit',$number_of_items,
+                                                         'offset',$view_parameters.offset))
+        $children=$result.selection
+        $children_count=$result.selection_count
+        $page_uri="flickr/selection"
+}
 
 <div class="content-view-children">
 
@@ -11,7 +22,7 @@
 
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 
-<h2 class="context-title">{$list_title}</h2>
+<h2 class="context-title">{"Current Selection (%count elements)"|i18n("flickr/main","",hash("%count",$children_count))}</h2>
 
 {* DESIGN: Subline *}<div class="header-subline"></div>
 
@@ -49,47 +60,57 @@
         {/switch}
     </p>
 </div>
-<div class="right">
-	<p>
-	{switch match=ezpreference( 'flickr_children_viewmode' )}
-	{case match='thumbnail'}
-	<a href={'/user/preferences/set/flickr_children_viewmode/list'|ezurl} title="{'Display sub items using a simple list.'|i18n( 'design/admin/node/view/full' )}">{'List'|i18n( 'design/admin/node/view/full' )}</a>
-	<span class="current">{'Thumbnail'|i18n( 'design/admin/node/view/full' )}</span>
-	{/case}
-	
-	{case}
-	<span class="current">{'List'|i18n( 'design/admin/node/view/full' )}</span>
-	<a href={'/user/preferences/set/flickr_children_viewmode/thumbnail'|ezurl} title="{'Display sub items as thumbnails.'|i18n( 'design/admin/node/view/full' )}">{'Thumbnail'|i18n( 'design/admin/node/view/full' )}</a>
-	{/case}
-	{/switch}
-	</p>
-</div>
 
 <div class="break"></div>
 
 </div>
 </div>
 
-{section show=$children}
-	{* Display the actual list of nodes. *}
-	{switch match=ezpreference( 'flickr_children_viewmode' )}
-		{case match='thumbnail'}
-		    {include uri='design:flickr/children_thumbnail.tpl'}
-		{/case}
-		
-		{case}
-		    {include uri='design:flickr/children_list.tpl'}
-		{/case}
-	{/switch}
+{if $children}
 
-{* Else: there are no children. *}
-{section-else}
-
-	<div class="block">
-	    <p>{'The current item does not contain any sub items.'|i18n( 'design/admin/node/view/full' )}</p>
+	<div class="content-navigation-childlist">
+	    <table class="list" cellspacing="0">
+	        <tr>
+	            {* Import column *}
+	            <th class="remove"><img src={'toggle-button-16x16.gif'|ezimage} alt="{'Invert selection.'|i18n( 'design/admin/node/view/full' )}" title="{'Invert selection.'|i18n( 'design/admin/node/view/full' )}" onclick="ezjs_toggleCheckboxes( document.flickraction, 'FlickrRemoveIDArray[]' ); return false;" /></th>
+	            {* Name column *}
+	            <th>{'Preview'|i18n( 'design/admin/node/view/full' )}</th>
+	            <th class="name">{'Name'|i18n( 'design/admin/node/view/full' )}</th>
+	            {* Class type column *}
+	            <th class="class">{'Type'|i18n( 'design/admin/node/view/full' )}</th>
+	        </tr>
+	        {def $flObject=false()}
+	        {foreach $children as $child sequence array( bglight, bgdark ) as $sequence}
+                {set $flObject=$child.flickr_element}
+		        {if $flObject}
+			        <tr class="{$sequence}">
+			            <td>
+			                <input type="checkbox" name="FlickrRemoveIDArray[]" value="{$child.id}"  />
+			            </td>
+			            <td>{flickr_view_gui view=thumbnail flobject=$flObject}</td>
+			            {* Name and link *}
+			            <td>{flickr_view_gui view=line flobject=$flObject}</td>
+			            {* Class type *}
+			            <td class="class">{$flObject.type|wash()}</td>
+			        </tr>
+		        {/if}
+	        {/foreach}
+	    
+	    </table>
 	</div>
 
-{/section}
+
+
+
+
+{* Else: there are no children. *}
+{else}
+
+    <div class="block">
+        <p>{'The current item does not contain any sub items.'|i18n( 'design/admin/node/view/full' )}</p>
+    </div>
+
+{/if}
 
 <div class="context-toolbar">
 {include name=navigator
@@ -97,7 +118,7 @@
          page_uri=$page_uri
          item_count=$children_count
          view_parameters=$view_parameters
-         item_limit=1}
+         item_limit=$number_of_items}
 </div>
 
 {* DESIGN: Content END *}</div></div></div>
@@ -108,9 +129,8 @@
 
 {* DESIGN: Control bar START *}<div class="box-bc"><div class="box-ml"><div class="box-mr"><div class="box-tc"><div class="box-bl"><div class="box-br">
 
-<input class="button" type="submit" name="AddToSelection" value="{'Add to selection'|i18n( 'flickr/main' )}" />
-<input class="button" type="submit" name="ImportSelected" value="{'Import'|i18n( 'flickr/main' )}" />
-    
+<input class="button" type="submit" name="RemoveSelected" value="{'Remove from selection'|i18n( 'flickr/main' )}" />
+<input class="button" type="submit" name="ImportSelection" value="{'Import current selection'|i18n( 'flickr/main' )}" />
 
 
 {* DESIGN: Control bar END *}</div></div></div></div></div></div>
@@ -124,3 +144,8 @@
 <!-- Children END -->
 
 </div>
+
+
+
+
+</form>

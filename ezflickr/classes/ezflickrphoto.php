@@ -11,10 +11,50 @@ class eZFlickrPhoto extends eZFlickrObject {
         $this->Secret=$row["secret"];
         $this->Server=$row["server"];
         $this->Farm=$row["farm"];
-        $this->Title=$row["title"];
+        if (array_key_exists("_content",$row["title"])) {
+            //photos.getInfo case
+            $this->Title=$row["title"]["_content"];
+        } else {
+            //photoset.getPhotos case
+            $this->Title=$row["title"];
+        }
         $this->OriginalSecret=isset($row["originalsecret"])?$row["originalsecret"]:false;
         parent::eZFlickrObject(self::TYPE);
     }
+
+    /**
+     * return one photo or false
+     *
+     * @param string $ID
+     * @param string $secret (secret code if available)
+     * @return eZFlickrPhoto
+     */
+    static function fetch($ID,$secret=false)
+    {
+        //Connection
+        try {
+            $eZFlickrConnect = eZFlickrConnect::instance();
+        } catch (eZFlickrConnectionRequiredException $e){
+            return $result;
+        }
+
+            //Call method
+        $params=array("photo_id"=>$ID);
+
+        $callResult = $eZFlickrConnect->callMethod(eZFlickrConnect::METHOD_PHOTOS_GETINFO,$params);
+
+        if (!isset($callResult["photo"])) {
+            return false;
+        }
+
+        if ($callResult["photo"]["media"]=="video")
+        {
+            return new eZFlickrVideo($callResult["photo"]);
+        } else {
+            return new eZFlickrPhoto($callResult["photo"]);
+        }
+    }
+
 
     static function fetchByPhotoset($photosetID,$limit=false,$page=1)
     {
@@ -35,7 +75,7 @@ class eZFlickrPhoto extends eZFlickrObject {
         //Call method
         $params=array("photoset_id"=>$photosetID,"page"=>$page);
         if ($limit) $params["per_page"]=$limit;
-        $params["extras"]="original_format";
+        $params["extras"]="original_format,media";
 
         $callResult = $eZFlickrConnect->callMethod(eZFlickrConnect::METHOD_PHOTOSETS_GETPHOTOS,$params);
 
@@ -46,7 +86,12 @@ class eZFlickrPhoto extends eZFlickrObject {
         //Get result
         foreach ($callResult["photoset"]["photo"] as $row)
         {
-            $photos[] = new eZFlickrPhoto($row);
+            if ($row["media"]=="video")
+            {
+                $photos[] = new eZFlickrVideo($row);
+            } else {
+                $photos[] = new eZFlickrPhoto($row);
+            }
         }
 
         $result = array(   'photos'        => $photos,
@@ -58,10 +103,59 @@ class eZFlickrPhoto extends eZFlickrObject {
         return $result;
     }
 
+
+    static function fetchRecent($limit=100,$page=1)
+    {
+        $photos = array();
+        $result = array(    'photos'        => array(),
+                            'photo_count'   => 0,
+                            'perpage'       => $limit,
+                            'pages'         => 0,
+                            'current_page'  => 1);
+
+        //Connection
+        try {
+            $eZFlickrConnect = eZFlickrConnect::instance();
+        } catch (eZFlickrConnectionRequiredException $e){
+            return $result;
+        }
+
+        //Call method
+        $params=array("page"=>$page);
+        if ($limit) $params["per_page"]=$limit;
+        $params["extras"]="original_format,media";
+        //Last 2 weeks
+        $params["min_date"]=mktime()-(3600*24*14);
+        $callResult = $eZFlickrConnect->callMethod(eZFlickrConnect::METHOD_PHOTOS_RECENTLYUPDATED,$params);
+
+        if (!isset($callResult["photos"])) {
+            throw new eZFlickrException("Error while calling : ".eZFlickrConnect::METHOD_PHOTOS_RECENTLYUPDATED);
+        }
+
+        //Get result
+        foreach ($callResult["photos"]["photo"] as $row)
+        {
+            if ($row["media"]=="video")
+            {
+                $photos[] = new eZFlickrVideo($row);
+            } else {
+                $photos[] = new eZFlickrPhoto($row);
+            }
+        }
+
+        $result = array(   'photos'        => $photos,
+                            'photo_count'   => $callResult["photos"]["total"],
+                            'perpage'       => $callResult["photos"]["perpage"],
+                            'pages'         => $callResult["photos"]["pages"],
+                            'current_page'  => $callResult["photos"]["page"]);
+
+        return $result;
+    }
+
     function attributes()
     {
         return array_merge(
-                        array('name','id','secret','server','farm','title','url_alias','original_secret','preview'),
+                        array('name','id','secret','server','farm','title','url_alias','original_secret','preview','ezflickr_id','biggest_image_url'),
                         parent::attributes()
                );
     }
@@ -87,15 +181,34 @@ class eZFlickrPhoto extends eZFlickrObject {
             case "url_alias":
                 return "flickr/photo/".$this->ID;
             case "ezflickr_id":
-                return self::TYPE."_".$this->ID;
+                return $this->type."_".$this->ID;
             case "preview":
                 return $this->getPreviewImage();
+            case "biggest_image_url":
+                return $this->getBiggestImageURL();
             default:
                 return parent::attribute($name);
         }
 
     }
 
+    /**
+     * return bigger file we get (original, "b", medium)
+     * @return string url
+     */
+    function getBiggestImageURL() {
+        $biggerWidth=0;
+        $bigger=false;
+        foreach ($this->getImageSizes() as $size)
+        {
+            if ($size->attribute('width')>$biggerWidth)
+            {
+                $biggerWidth = $biggerWidth;
+                $biggerURL = $size->attribute('source');
+            }
+        }
+        return $biggerURL;
+    }
 
     /**
      * return preview image src
@@ -131,6 +244,20 @@ class eZFlickrPhoto extends eZFlickrObject {
         return $url.".".$ext;
     }
 
+    /**
+     * Return Image Sizes Array
+     *
+     * @return array eZFlickrPhotoSize
+     */
+    function getImageSizes() {
+        if (!$this->Sizes)
+        {
+            $this->Sizes = eZFlickrPhotoSize::fetchByPhotoID($this->ID);
+        }
+
+        return $this->Sizes;
+    }
+
 
     var $ID;
     var $Secret;
@@ -138,6 +265,7 @@ class eZFlickrPhoto extends eZFlickrObject {
     var $Server;
     var $Farm;
     var $Title;
+    var $Sizes=false;
 
 }
 

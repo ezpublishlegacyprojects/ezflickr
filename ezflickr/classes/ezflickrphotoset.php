@@ -72,7 +72,7 @@ class eZFlickrPhotoset extends eZFlickrObject {
     function attributes()
     {
         return array_merge(
-                        array('name','id','primary','secret','server','photo_count','farm','title','description','video_count','url_alias','preview'),
+                        array('name','id','primary','secret','server','photo_count','farm','title','description','video_count','url_alias','preview','ezflickr_id'),
                         parent::attributes()
                );
     }

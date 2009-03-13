@@ -52,5 +52,35 @@ $FunctionList['current_person'] = array(
                                         'parameter_type' => 'standard',
                                         'parameters' => array());
 
+$FunctionList['recent_photos'] = array(
+                                        'name' => 'recent_photos',
+                                        'operation_types' => array( 'read' ),
+                                        'call_method' => array( 'include_file' => 'extension/ezflickr/modules/flickr/ezflickrfunctioncollection.php',
+                                                                'class' => 'eZFlickrFunctionCollection',
+                                                                'method' => 'fetchRecentPhotos' ),
+                                        'parameter_type' => 'standard',
+                                        'parameters' => array(
+                                                                array(  'name' => 'limit',
+                                                                        'type' => 'integer',
+                                                                        'required' => false ),
+                                                                array(  'name' => 'page',
+                                                                        'type' => 'integer',
+                                                                        'required' => false )));
+
+$FunctionList['user_selection'] = array(
+                                        'name' => 'user_selection',
+                                        'operation_types' => array( 'read' ),
+                                        'call_method' => array( 'include_file' => 'extension/ezflickr/modules/flickr/ezflickrfunctioncollection.php',
+                                                                'class' => 'eZFlickrFunctionCollection',
+                                                                'method' => 'fetchUserSelection' ),
+                                        'parameter_type' => 'standard',
+                                        'parameters' => array(
+                                                                array(  'name' => 'limit',
+                                                                        'type' => 'integer',
+                                                                        'required' => false ),
+                                                                array(  'name' => 'offset',
+                                                                        'type' => 'integer',
+                                                                        'required' => false )));
+
 
 ?>

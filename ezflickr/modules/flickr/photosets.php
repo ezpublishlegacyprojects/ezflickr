@@ -30,6 +30,13 @@ $Module = $Params["Module"];
 
 $tpl = templateInit();
 
+$Result['path']=array(
+                        array(  'text' =>  ezi18n( 'flickr/main', 'Flickr Library' ),
+                                'url' => "flickr/home" ),
+                        array(  'text' =>  ezi18n( 'flickr/main', 'Photosets' ),
+                                'url' => false ),
+                        );
+
 $Result['content']=$tpl->fetch("design:flickr/photosets.tpl");
 
 

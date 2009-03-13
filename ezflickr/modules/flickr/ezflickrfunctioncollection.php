@@ -12,7 +12,8 @@ class eZFlickrFunctionCollection {
      *
      * @return array of eZFlickrPhotoset
      */
-    function fetchPhotosets() {
+    function fetchPhotosets()
+    {
         return array('result'=>eZFlickrPhotoset::fetchAll());
     }
 
@@ -21,7 +22,8 @@ class eZFlickrFunctionCollection {
      *
      * @return array of eZFlickrPhotoset
      */
-    function fetchPhotosetPhotos($PhotosetID,$limit=false,$page=0) {
+    function fetchPhotosetPhotos($PhotosetID,$limit=false,$page=0)
+    {
         return array('result'=>eZFlickrPhoto::fetchByPhotoset($PhotosetID,$limit,$page));
     }
 
@@ -30,7 +32,8 @@ class eZFlickrFunctionCollection {
      *
      * @return array of eZFlickrPhotoset
      */
-    function fetchPerson($nsid) {
+    function fetchPerson($nsid)
+    {
         return array('result'=>eZFlickrPerson::fetch($nsid));
     }
 
@@ -39,9 +42,36 @@ class eZFlickrFunctionCollection {
      *
      * @return array of eZFlickrPhotoset
      */
-    function fetchCurrentPerson() {
+    function fetchCurrentPerson()
+    {
         return array('result'=>eZFlickrPerson::fetchCurrent());
     }
+
+
+    /**
+     * return recent uploads
+     *
+     * @return array of eZFlickrPhoto or eZFlickrVideo
+     */
+    function fetchRecentPhotos($limit=100,$page=1)
+    {
+        return array('result'=>eZFlickrPhoto::fetchRecent($limit,$page));
+    }
+
+    /**
+     * return user eZFlickrSelection elements
+     *
+     * @param integer $limit limit by page
+     * @param integer $offset offset (eZ Publish way)
+     * @return array of eZFlickrSelection
+     */
+    function fetchUserSelection($limit=10,$offset=0)
+    {
+        $result = array(    'selection'     => eZFlickrSelection::fetchCurrentUserSelection($limit,$offset),
+                            'selection_count'   => eZFlickrSelection::fetchCurrentUserSelectionCount());
+        return array('result'=>$result);
+    }
+
 
 }
 

@@ -20,7 +20,13 @@ class eZFlickrConnect {
     const METHOD_PHOTOSETS_GETPHOTOS    = "flickr.photosets.getPhotos";
 
     //Flickr Methods Persons
-    const METHOD_PERSON_GETINFO         ="flickr.people.getInfo";
+    const METHOD_PERSON_GETINFO         = "flickr.people.getInfo";
+
+    //Flickr Methods Photos
+    const METHOD_PHOTOS_GETINFO         = "flickr.photos.getInfo";
+    const METHOD_PHOTOS_GETSIZES         = "flickr.photos.getSizes";
+    const METHOD_PHOTOS_GETRECENT       = "flickr.photos.getRecent";
+    const METHOD_PHOTOS_RECENTLYUPDATED = "flickr.photos.recentlyUpdated";
 
     /**
      * constructor

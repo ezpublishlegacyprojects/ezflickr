@@ -60,7 +60,7 @@ class eZFlickrPerson extends eZFlickrObject {
     function attributes()
     {
         return array_merge(
-                        array('nsid','isadmin','ispro','iconserver','iconfarm','username','realname','location','photosurl','profileurl','photocount'),
+                        array('nsid','is_admin','is_pro','iconserver','iconfarm','username','realname','location','photos_url','profile_url','photo_count','icon'),
                         parent::attributes()
                );
     }
@@ -73,9 +73,9 @@ class eZFlickrPerson extends eZFlickrObject {
 
             case "nsid":
                 return $this->NSID;
-            case "isadmin":
+            case "is_admin":
                 return ($this->IsAdmin==1)?true:false;
-            case "ispro":
+            case "is_pro":
                 return ($this->IsPro==1)?true:false;
             case "iconserver":
                 return $this->IconServer;
@@ -87,12 +87,14 @@ class eZFlickrPerson extends eZFlickrObject {
                 return $this->UserName;
             case "location":
                 return $this->RealName;
-            case "photosurl":
+            case "photos_url":
                 return $this->PhotosUrl;
-            case "profileurl":
+            case "profile_url":
                 return $this->ProfileUrl;
-            case "photocount":
+            case "photo_count":
                 return $this->PhotoCount;
+            case "icon":
+                return $this->getIconSrc();
             default:
                 return parent::attribute($name);
         }
@@ -100,38 +102,23 @@ class eZFlickrPerson extends eZFlickrObject {
     }
 
 
-    /**
-     * return preview image src
-     *
-     * @return string url
-     */
-    function getPreviewImage()
-    {
-        return self::getImageSrc($this->ID,$this->Farm,$this->Server,$this->Secret,'s');
-    }
+
 
     /**
-     * retourne d'url d'une iamge
+     * return person icon URL
      *
-     * @param integer $photo_id
-     * @param integer $farm
-     * @param integer $server
-     * @param string $secret
-     * @param string $size
-     * s    petit carré 75x75
-     * t   miniature, côté le plus long de 100
-     * m   petit, côté le plus long de 240
-     * -   moyen, côté le plus long de 500 (http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret}.jpg)
-     * b   grand, côté le plus long de 1024
-     * o original
-     * @param string $ext extension du fichier (pour original uniquemen)
-     * http://farm{farm-id}.static.flickr.com/{server-id}/{id}_{secret|o-secret}_[mstbo].jpg
+     * http://farm{icon-farm}.static.flickr.com/{icon-server}/buddyicons/{nsid}.jpg
+     *
+     *  sinon, l'url suivant doit être utilisé :
+     *  http://www.flickr.com/images/buddyicon.jpg
      */
-    static function getImageSrc($photo_id,$farm,$server,$secret,$size=false,$ext="jpg")
+    function getIconSrc()
     {
-        $url = "http://farm".$farm.".static.flickr.com/".$server."/".$photo_id."_".$secret;
-        if ($size) $url .= "_".$size;
-        return $url.".".$ext;
+        if ($this->IconServer>0) {
+            return "http://farm".($this->IconFarm).".static.flickr.com/".($this->IconServer)."/buddyicons/".($this->NSID).".jpg";
+        } else {
+            return "http://www.flickr.com/images/buddyicon.jpg";
+        }
     }
 
 

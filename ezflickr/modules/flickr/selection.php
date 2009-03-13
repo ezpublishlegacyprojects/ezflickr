@@ -27,16 +27,53 @@
 include_once( 'kernel/common/template.php' );
 
 $Module = $Params["Module"];
+$http = new eZHTTPTool();
+
+/*
+ * Action
+ */
+switch ($Module->currentAction())
+{
+    case "ImportSelection";
+        $redirectURI = "flickr/import";
+        //continue to AddToSelection for adding current selection
+        $Module->redirectTo($redirectURI);
+        return;
+    case "RemoveSelected";
+        if ($http->hasPostVariable('FlickrRemoveIDArray'))
+        {
+            $flickrSelectionIDs = $http->postVariable('FlickrRemoveIDArray');
+            if (!is_array($flickrSelectionIDs))
+            {
+                $flickrSelectionIDs=array($flickrSelectionIDs);
+            }
+
+            foreach ($flickrSelectionIDs as $ID)
+            {
+                eZFlickrSelection::removeByID($ID);
+            }
+        }
+        break;
+    default:
+        //nothing
+}
+
+/*
+ * List View
+ */
+
 
 $tpl = templateInit();
 $tpl->setVariable("view_parameters",$Params["UserParameters"]);
 
 $Result['path']=array(
                         array(    'text' =>  ezi18n( 'flickr/main', 'Flickr Library' ),
+                                   'url' => "flickr/home" ),
+                        array(    'text' =>  ezi18n( 'flickr/main', 'Selection' ),
                                    'url' => false )
                         );
 
-$Result['content']=$tpl->fetch("design:flickr/home.tpl");
+$Result['content']=$tpl->fetch("design:flickr/selection.tpl");
 
 
 ?>

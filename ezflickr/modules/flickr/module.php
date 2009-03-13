@@ -49,8 +49,49 @@ $ViewList['photosets']  = array(    'script' => 'photosets.php',
 
 $ViewList['photoset']   = array(    'script' => 'photoset.php',
                                     'default_navigation_part' => 'ezmedianavigationpart',
-                                    'params' => array("PhotosetID","Page")
+                                    'params' => array("PhotosetID")
                                  );
+
+/*
+ * User selection
+ */
+$ViewList['selection']   = array(    'script' => 'selection.php',
+                                     'default_navigation_part' => 'ezmedianavigationpart',
+                                     'params' => array(),
+                                     'single_post_actions' => array( 'RemoveSelected' => 'RemoveSelected',
+                                                                     'ImportSelection' => 'ImportSelection'
+                                                                        )
+                                 );
+
+/*
+ * Import page
+ */
+$ViewList['import']   = array(       'script' => 'import.php',
+                                     'default_navigation_part' => 'ezmedianavigationpart',
+                                     'params' => array(),
+                                     'ui_context' => 'edit'
+                                 );
+/*
+ * Ajax do Import
+ */
+$ViewList['doimport']   = array(       'script' => 'doimport.php',
+                                       'default_navigation_part' => 'ezmedianavigationpart',
+                                       'params' => array('parentNodeID','flickrSelectionID'),
+                                       'ui_context' => 'edit'
+                                 );
+
+
+/*
+ * Action : add to selection, import...
+ * ui_context edit is used to make sure that this URL won't be set as LastAccessURI
+ */
+$ViewList['action']       = array(      'script' => 'action.php',
+                                        'default_navigation_part' => 'ezmedianavigationpart',
+                                        'ui_context' => 'edit',
+                                        'single_post_actions' => array( 'AddToSelection' => 'AddToSelection',
+                                                                        'ImportSelected' => 'ImportSelected'
+                                                                        ));
+
 
 
 ?>
