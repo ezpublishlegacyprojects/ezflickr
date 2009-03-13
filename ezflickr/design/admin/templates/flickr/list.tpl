@@ -7,7 +7,6 @@
 
 
 <div class="context-block">
-<form name="children" method="post" action={'content/action'|ezurl}>
 
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 
@@ -95,7 +94,7 @@
 {include name=navigator
          uri='design:navigator/alphabetical.tpl'
          page_uri=$page_uri
-         item_count=$children_count
+         item_count=$page_count
          view_parameters=$view_parameters
          item_limit=1}
 </div>
@@ -117,7 +116,6 @@
 
 </div>
 
-</form>
 
 </div>
 

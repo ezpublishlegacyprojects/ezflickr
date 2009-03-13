@@ -1,6 +1,4 @@
 <?php
-
-
 $http = eZHTTPTool::instance();
 $module = $Params['Module'];
 
@@ -18,11 +16,9 @@ if ($http->hasSessionVariable( "LastAccessesURI" )) {
 switch ($module->currentAction())
 {
     case "ImportSelected";
-        $redirectURI = "flickr/selection";
+        $redirectURI = "flickr/import";
         //continue to AddToSelection for adding current selection
     case "AddToSelection";
-
-
         if ($http->hasPostVariable('FlickrImportIDArray'))
         {
             $flickrIDs = $http->postVariable('FlickrImportIDArray');
@@ -33,13 +29,30 @@ switch ($module->currentAction())
 
             $currentUserID = eZUser::currentUserID();
 
-
             foreach ($flickrIDs as $flickrID)
             {
                 $selection = new eZFlickrSelection();
                 $selection->setAttribute('flickr_id',$flickrID);
                 $selection->setAttribute('user_id',$currentUserID);
                 $selection->store();
+            }
+        }
+        break;
+    case "ImportSelection";
+        $redirectURI = "flickr/import";
+        break;
+    case "RemoveSelected";
+        if ($http->hasPostVariable('FlickrRemoveIDArray'))
+        {
+            $flickrSelectionIDs = $http->postVariable('FlickrRemoveIDArray');
+            if (!is_array($flickrSelectionIDs))
+            {
+                $flickrSelectionIDs=array($flickrSelectionIDs);
+            }
+
+            foreach ($flickrSelectionIDs as $ID)
+            {
+                eZFlickrSelection::removeByID($ID);
             }
         }
         break;

@@ -1,4 +1,6 @@
-<form name="flickraction" action={"flickr/selection"|ezurl} method="post" enctype="multipart/form-data">
+<form name="flickraction" action={"flickr/action"|ezurl} method="post" enctype="multipart/form-data">
+{include uri='design:flickr/head.tpl' hide_selection=true()}
+
 
 
 {def    $item_type=ezpreference( 'flickr_list_limit' )
@@ -18,7 +20,6 @@
 
 
 <div class="context-block">
-<form name="children" method="post" action={'content/action'|ezurl}>
 
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 
@@ -137,7 +138,6 @@
 
 </div>
 
-</form>
 
 </div>
 

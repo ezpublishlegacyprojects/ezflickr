@@ -57,13 +57,14 @@ class eZFlickrSelection extends eZPersistentObject
      *
      * @return array
      */
-    static function fetchCurrentUserSelection($limit=null,$offset=null)
+    static function fetchCurrentUserSelection($limit=null,$offset=null,$sortOrder='desc')
     {
         return eZPersistentObject::fetchObjectList( self::definition(),
                                                     null,
                                                     array("user_id"=>eZUser::currentUserID()),
-                                                    null,
-                                                    array("limit"=>$limit,"offset"=>$offset));
+                                                    array("id"=>$sortOrder),
+                                                    array("limit"=>$limit,"offset"=>$offset)
+                                                    );
     }
 
     /**

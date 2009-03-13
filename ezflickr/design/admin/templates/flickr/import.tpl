@@ -1,4 +1,9 @@
 
+<form action={"flickr/import"|ezurl} method="post" enctype="multipart/form-data">
+
+
+{if $node}
+
 <script type="text/javascript" src={"javascript/yui/2.5.2/build/utilities/utilities.js"|ezdesign}></script>
 <script type="text/javascript">
 <!--
@@ -8,7 +13,7 @@
 function FlickrImport()
 {
 {/literal}
-    this.url="{concat("flickr/doimport/",$location)|ezurl(no)}/";
+    this.url="{concat("flickr/doimport/",$node.node_id)|ezurl(no)}/";
     this.imported=0;
     this.failures=0;
     this.selectionCount={$flickrSelection|count()};
@@ -94,14 +99,15 @@ var flImport = new FlickrImport();
 -->
 </script>
 
+{/if}
+
 
 
 <div class="context-block">
-<form name="children" method="post" action={'content/action'|ezurl}>
 
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 
-<h2 class="context-title">{"Flickr Import"|i18n("flickr/main")}</h2>
+<h2 class="context-title">{"Flickr Import : %count elements"|i18n("flickr/main","",hash("%count",$flickrSelection|count))}</h2>
 
 {* DESIGN: Subline *}<div class="header-subline"></div>
 
@@ -110,10 +116,14 @@ var flImport = new FlickrImport();
 {* DESIGN: Content START *}<div class="box-ml"><div class="box-mr"><div class="box-content">
 <div class="context-toolbar"></div>
 
-
 <div class="block">
-    <div id="ezflicr-import">
-        <p>{"You have %count selected elements to import"|i18n("flickr/main","",hash("%count",$flickrSelection|count))}</p>
+    <div id="ezflickr-import">
+		{if $node}
+		<p>{"New elements will be placed in:"|i18n("flickr/main")} <a href={$node.url_alias|ezurl()}>{$node.name|wash}</a></p>
+		{else}
+		<p class="error">{"Please select a placement before importing"|i18n("flickr/main")}</p>
+		{/if}
+        
 	    <div id="uploadstatus">
 	        <div  id="uploadstatusbar">
 	            <img id="uploadstatusbarimage" src={"flickr/loader.gif"|ezimage()} style="width:0px" height="15px" alt=""/>
@@ -121,11 +131,7 @@ var flImport = new FlickrImport();
 	        <span id="uploadstatustext">0/{$flickrSelection|count}</span>
 	        <span id="uploadstatusfailuretext" class="import-error"></span>
 	    </div>
-	    <div id="uploadcontrols">
-	        <input type="button" class="button" value="{"Launch import"|i18n("flickr/main")}" onclick="javascript:flImport.doImport();return false" id="flickrLaunchButton"/>
-	        {def $node=fetch('content','node',hash('node_id',$location))}
-	        <p id="backURL" style="display:none"><a href={$node.url_alias|ezurl()}>{$node.name|wash()}</a></p>
-	    </div>
+	    <div class="break"></div>
     </div>
 </div>
 
@@ -134,7 +140,17 @@ var flImport = new FlickrImport();
 
 <div class="controlbar">
 {* DESIGN: Control bar START *}<div class="box-bc"><div class="box-ml"><div class="box-mr"><div class="box-tc"><div class="box-bl"><div class="box-br">
+
+{if $node}
+	<input type="submit" class="button" name="ChooseFlickrImportPlace" value="{"Change placement"|i18n("flickr/main")}"/>
+    {if $flickrSelection|count|gt(0)}<input type="button" class="button" value="{"Launch import"|i18n("flickr/main")}" onclick="javascript:flImport.doImport();return false" id="flickrLaunchButton"/>{/if}
+{else}
+    <input type="submit" class="button" name="ChooseFlickrImportPlace" value="{"Select a placement"|i18n("flickr/main")}"/>
+{/if}
+
 {* DESIGN: Control bar END *}</div></div></div></div></div></div>
 </div>
 
 </div>
+
+</form>

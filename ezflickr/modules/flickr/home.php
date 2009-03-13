@@ -28,6 +28,13 @@ include_once( 'kernel/common/template.php' );
 
 $Module = $Params["Module"];
 
+if (isset($Params['NodeID']) && $Params['NodeID'])
+{
+    $http = new eZHTTPTool();
+    $http->setSessionVariable('flickr_import_node_id',$Params['NodeID']);
+}
+
+
 $tpl = templateInit();
 $tpl->setVariable("view_parameters",$Params["UserParameters"]);
 

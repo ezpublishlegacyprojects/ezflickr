@@ -1,5 +1,5 @@
-<form action={"flickr/action"|ezurl} method="post" enctype="multipart/form-data">
 
+<form action={"flickr/action"|ezurl} method="post" enctype="multipart/form-data">
 
 {include uri='design:flickr/head.tpl'}
 
@@ -17,5 +17,8 @@
         $page_count=$result.pages
         $page_uri="flickr/home"
 }
-{include uri='design:flickr/list.tpl' list_title="Recently Updates (%count elements)"|i18n("flickr/main","",hash("%count",$children_count))}
+{include uri='design:flickr/list.tpl' list_title="Recently Updated (%count elements)"|i18n("flickr/main","",hash("%count",$children_count))}
+
+{include uri='design:flickr/bottom.tpl'}
+
 </form>

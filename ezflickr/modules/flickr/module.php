@@ -25,7 +25,7 @@
 //
 
 
-$Module = array( 'name' => 'Polyspot' );
+$Module = array( 'name' => 'Flickr' );
 
 $ViewList = array();
 
@@ -39,10 +39,11 @@ $ViewList['connect']    = array(    'script' => 'connect.php',
  * Home
  */
 $ViewList['home']       = array(    'script' => 'home.php',
-                                    'default_navigation_part' => 'ezmedianavigationpart' );
+                                    'default_navigation_part' => 'ezmedianavigationpart',
+                                    'params' => array("NodeID"));
 
 /*
- * Photosets
+ * Photosets and Photo
  */
 $ViewList['photosets']  = array(    'script' => 'photosets.php',
                                     'default_navigation_part' => 'ezmedianavigationpart' );
@@ -51,16 +52,17 @@ $ViewList['photoset']   = array(    'script' => 'photoset.php',
                                     'default_navigation_part' => 'ezmedianavigationpart',
                                     'params' => array("PhotosetID")
                                  );
+$ViewList['photo']      = array(    'script' => 'photo.php',
+                                    'default_navigation_part' => 'ezmedianavigationpart',
+                                    'params' => array("PhotoID")
+                                 );
 
 /*
  * User selection
  */
 $ViewList['selection']   = array(    'script' => 'selection.php',
                                      'default_navigation_part' => 'ezmedianavigationpart',
-                                     'params' => array(),
-                                     'single_post_actions' => array( 'RemoveSelected' => 'RemoveSelected',
-                                                                     'ImportSelection' => 'ImportSelection'
-                                                                        )
+                                     'params' => array()
                                  );
 
 /*
@@ -69,7 +71,11 @@ $ViewList['selection']   = array(    'script' => 'selection.php',
 $ViewList['import']   = array(       'script' => 'import.php',
                                      'default_navigation_part' => 'ezmedianavigationpart',
                                      'params' => array(),
-                                     'ui_context' => 'edit'
+                                     'ui_context' => 'edit',
+                                     'single_post_actions' => array('ChooseFlickrImportPlace'=>'ChooseFlickrImportPlace',
+                                                                    'FlickrImportPlace'=>'FlickrImportPlace'
+                                                                    ),
+                                     'post_actions' => array( 'BrowseActionName' )
                                  );
 /*
  * Ajax do Import
@@ -89,7 +95,9 @@ $ViewList['action']       = array(      'script' => 'action.php',
                                         'default_navigation_part' => 'ezmedianavigationpart',
                                         'ui_context' => 'edit',
                                         'single_post_actions' => array( 'AddToSelection' => 'AddToSelection',
-                                                                        'ImportSelected' => 'ImportSelected'
+                                                                        'ImportSelected' => 'ImportSelected',
+                                                                        'RemoveSelected' => 'RemoveSelected',
+                                                                        'ImportSelection' => 'ImportSelection'
                                                                         ));
 
 
