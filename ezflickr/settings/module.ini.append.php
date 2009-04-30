@@ -2,5 +2,6 @@
 
 [ModuleSettings]
 ExtensionRepositories[]=ezflickr
+ModuleList[]=flickr
 
 */ ?>
