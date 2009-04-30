@@ -89,17 +89,16 @@ class eZFlickrObject {
 
 
         //Class
-        $classIdentifier = $ezflickrINI->variable($iniGroup,'ClassIdentifier');
         //mandatory attributes
         $fileAttribute = $ezflickrINI->variable($iniGroup,'FileAttribute');
         $nameAttribute = $ezflickrINI->variable($iniGroup,'NameAttribute');
         //other attributes
         $descriptionAttribute = false;
-        if ($ezflickrINI->hasVariable($this->type,'DescriptionAttribute')) {
+        if ($ezflickrINI->hasVariable($iniGroup,'DescriptionAttribute')) {
             $descriptionAttribute = $ezflickrINI->variable($iniGroup,'DescriptionAttribute');
         }
         $tagAttribute = false;
-        if ($ezflickrINI->hasVariable($this->type,'TagAttribute')) {
+        if ($ezflickrINI->hasVariable($iniGroup,'TagAttribute')) {
             $tagAttribute = $ezflickrINI->variable($iniGroup,'TagAttribute');
         }
 
