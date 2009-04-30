@@ -11,7 +11,7 @@
 	
 	{* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 	
-	<h2 class="context-title">{"Current Selection (%count elements)"|i18n("flickr/main","",hash("%count",$resultSelection.selection_count))}{if $lastItems|count()|gt(0)} : {"Last %count items"|i18n("flickr/main","",hash("%count",$lastItems|count()))}{/if}</h2>
+	<h2 class="context-title">{"Current Selection"|i18n("flickr/main")} {if $lastItems|count()|gt(0)} : {"Last %count items"|i18n("flickr/main","",hash("%count",$lastItems|count()))}{/if}</h2>
 	
 	{* DESIGN: Subline *}<div class="header-subline"></div>
 	

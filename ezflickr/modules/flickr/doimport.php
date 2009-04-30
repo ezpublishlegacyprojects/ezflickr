@@ -20,7 +20,7 @@ if ($flickrSelectionID && $parentNodeID) {
     $selection          = eZFlickrSelection::fetch($flickrSelectionID);
     if($selection) {
         $flickrElement = $selection->attribute("flickr_element");
-        if ($flickrElement && $flickrElement->attribute('type')==eZFlickrPhoto::TYPE) {
+        if ($flickrElement && $flickrElement->attribute('can_import')) {
             $result = $flickrElement->createEZObject($parentNodeID);
         }
     }

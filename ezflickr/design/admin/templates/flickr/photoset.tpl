@@ -14,7 +14,7 @@
         $page_uri=$photoset.url_alias
 }
 
-{include uri='design:flickr/list.tpl' list_title="%photoset (%count elements)"|i18n("flickr/main","",hash("%photoset",$photoset.title,"%count",$children_count))}
+{include uri='design:flickr/list.tpl' list_title="%photoset (%count)"|i18n("flickr/main","",hash("%photoset",$photoset.title,"%count",$children_count))}
 
 
 {include uri='design:flickr/bottom.tpl'}

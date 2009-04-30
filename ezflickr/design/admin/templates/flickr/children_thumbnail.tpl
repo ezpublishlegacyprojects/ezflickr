@@ -5,7 +5,7 @@
         <td width="25%">
             {flickr_view_gui view=thumbnail flobject=$child}
 	        <div class="controls">
-	            <input type="checkbox" name="FlickrImportIDArray[]" value="{$child.ezflickr_id}" />
+	            <input type="checkbox" name="FlickrImportIDArray[]" value="{$child.ezflickr_id}"  {if $child.can_import|not()}disabled="disabled"{/if} />
 		        <p><a href={$child.url_alias|ezurl}>{$child.name|wash()}</a></p>
 	        </div>
 		</td>

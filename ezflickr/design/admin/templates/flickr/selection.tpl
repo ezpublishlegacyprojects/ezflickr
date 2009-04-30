@@ -23,7 +23,7 @@
 
 {* DESIGN: Header START *}<div class="box-header"><div class="box-tc"><div class="box-ml"><div class="box-mr"><div class="box-tl"><div class="box-tr">
 
-<h2 class="context-title">{"Current Selection (%count elements)"|i18n("flickr/main","",hash("%count",$children_count))}</h2>
+<h2 class="context-title">{"Current Selection"|i18n("flickr/main")} {if $children_count|eq(0)}{"(empty)"|i18n("flickr/main")}{else}({$children_count}){/if}</h2>
 
 {* DESIGN: Subline *}<div class="header-subline"></div>
 
@@ -40,22 +40,22 @@
     <p>
     {switch match=$number_of_items}
     {case match=20}
-        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'design/admin/node/view/full' )}">10</a>
+        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'flickr/main' )}">10</a>
         <span class="current">20</span>
-        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 50 items per page.'|i18n( 'design/admin/node/view/full' )}">30</a>
+        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 30 items per page.'|i18n( 'flickr/main' )}">30</a>
 
         {/case}
 
         {case match=30}
-        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'design/admin/node/view/full' )}">10</a>
-        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 25 items per page.'|i18n( 'design/admin/node/view/full' )}">20</a>
+        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'flickr/main' )}">10</a>
+        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 20 items per page.'|i18n( 'flickr/main' )}">20</a>
         <span class="current">30</span>
         {/case}
 
         {case}
         <span class="current">10</span>
-        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 25 items per page.'|i18n( 'design/admin/node/view/full' )}">20</a>
-        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 50 items per page.'|i18n( 'design/admin/node/view/full' )}">30</a>
+        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 20 items per page.'|i18n( 'flickr/main' )}">20</a>
+        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 30 items per page.'|i18n( 'flickr/main' )}">30</a>
         {/case}
 
         {/switch}
@@ -108,7 +108,7 @@
 {else}
 
     <div class="block">
-        <p>{'The current item does not contain any sub items.'|i18n( 'design/admin/node/view/full' )}</p>
+        <p>{'The current selection is empty'|i18n( 'flickr/main' )}</p>
     </div>
 
 {/if}

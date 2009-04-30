@@ -14,7 +14,7 @@
 	    {foreach $children as $child sequence array( bglight, bgdark ) as $sequence}
 	    <tr class="{$sequence}">
 	        <td>
-	            <input type="checkbox" name="FlickrImportIDArray[]" value="{$child.ezflickr_id}"  />
+	            <input type="checkbox" name="FlickrImportIDArray[]" value="{$child.ezflickr_id}" {if $child.can_import|not()}disabled="disabled"{/if} />
 	        </td>
 	        {* Name and link *}
 	        <td>{flickr_view_gui view=line flobject=$child}</td>

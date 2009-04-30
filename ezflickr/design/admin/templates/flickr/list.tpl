@@ -27,22 +27,22 @@
     <p>
     {switch match=$number_of_items}
     {case match=20}
-        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'design/admin/node/view/full' )}">10</a>
+        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'flickr/main' )}">10</a>
         <span class="current">20</span>
-        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 50 items per page.'|i18n( 'design/admin/node/view/full' )}">30</a>
+        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 30 items per page.'|i18n( 'flickr/main' )}">30</a>
 
         {/case}
 
         {case match=30}
-        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'design/admin/node/view/full' )}">10</a>
-        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 25 items per page.'|i18n( 'design/admin/node/view/full' )}">20</a>
+        <a href={'/user/preferences/set/flickr_list_limit/1'|ezurl} title="{'Show 10 items per page.'|i18n( 'flickr/main' )}">10</a>
+        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 20 items per page.'|i18n( 'flickr/main' )}">20</a>
         <span class="current">30</span>
         {/case}
 
         {case}
         <span class="current">10</span>
-        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 25 items per page.'|i18n( 'design/admin/node/view/full' )}">20</a>
-        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 50 items per page.'|i18n( 'design/admin/node/view/full' )}">30</a>
+        <a href={'/user/preferences/set/flickr_list_limit/2'|ezurl} title="{'Show 20 items per page.'|i18n( 'flickr/main' )}">20</a>
+        <a href={'/user/preferences/set/flickr_list_limit/3'|ezurl} title="{'Show 30 items per page.'|i18n( 'flickr/main' )}">30</a>
         {/case}
 
         {/switch}

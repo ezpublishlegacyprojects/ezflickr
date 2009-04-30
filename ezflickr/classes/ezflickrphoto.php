@@ -5,7 +5,7 @@ class eZFlickrPhoto extends eZFlickrObject {
 
     const TYPE="photo";
 
-    function eZFlickrPhoto($row)
+    function eZFlickrPhoto($row,$ownerId=false)
     {
         $this->ID=$row["id"];
         $this->Secret=$row["secret"];
@@ -18,6 +18,30 @@ class eZFlickrPhoto extends eZFlickrObject {
             //photoset.getPhotos case
             $this->Title=$row["title"];
         }
+
+        if ($ownerId)
+        {
+            $this->OwnerId=$ownerId;
+        }
+
+        //GETINFO data
+        if (isset($row["description"]))
+        {
+            $this->Description=$row["description"]["_content"];
+        }
+
+        if (isset($row["tags"]))
+        {
+            foreach ($row["tags"]["tag"] as $tag) {
+                $this->Tags[]=$tag["_content"];
+            }
+        }
+
+        if (isset($row["owner"]))
+        {
+            $this->OwnerId=$row["owner"]["nsid"];
+        }
+
         $this->OriginalSecret=isset($row["originalsecret"])?$row["originalsecret"]:false;
         parent::eZFlickrObject(self::TYPE);
     }
@@ -90,7 +114,7 @@ class eZFlickrPhoto extends eZFlickrObject {
             {
                 $photos[] = new eZFlickrVideo($row);
             } else {
-                $photos[] = new eZFlickrPhoto($row);
+                $photos[] = new eZFlickrPhoto($row,$callResult["photoset"]["owner"]);
             }
         }
 
@@ -155,10 +179,14 @@ class eZFlickrPhoto extends eZFlickrObject {
     function attributes()
     {
         return array_merge(
-                        array('name','id','secret','server','farm','title','url_alias','original_secret','preview','ezflickr_id','biggest_image_url'),
+                        array(  'name','id','secret','server',
+                                'farm','title','url_alias','original_secret',
+                                'preview','ezflickr_id','biggest_image_url','sizes',
+                                'description','tags','tag_string','medium','owner_id','flickr_url'),
                         parent::attributes()
                );
     }
+
 
 
     function attribute($name)
@@ -184,8 +212,22 @@ class eZFlickrPhoto extends eZFlickrObject {
                 return $this->type."_".$this->ID;
             case "preview":
                 return $this->getPreviewImage();
+            case "medium":
+                return self::getImageSrc($this->ID,$this->Farm,$this->Server,$this->Secret);
             case "biggest_image_url":
                 return $this->getBiggestImageURL();
+            case "sizes":
+                return $this->getImageSizes();
+            case "tags":
+                return $this->Tags;
+            case "description":
+                return $this->Description;
+            case "tag_string":
+                return implode(",",$this->Tags);
+            case "owner_id":
+                return $this->OwnerId;
+            case "flickr_url":
+                return "http://www.flickr.com/photos/".$this->OwnerId."/".$this->ID."/";
             default:
                 return parent::attribute($name);
         }
@@ -266,6 +308,9 @@ class eZFlickrPhoto extends eZFlickrObject {
     var $Farm;
     var $Title;
     var $Sizes=false;
+    var $Description;
+    var $Tags=array();
+    var $OwnerId;
 
 }
 

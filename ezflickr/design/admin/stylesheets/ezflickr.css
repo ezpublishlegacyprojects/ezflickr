@@ -20,12 +20,19 @@ div#ezflickr-header
 div#ezflickr-import 
 {
 }
+	div#ezflickr-import label {
+	   display:inline;
+	   font-weight:normal;
+	}
+	
+	div#ezflickr-import select {
+	   display:inline;
+	}
 
 	div#ezflickr-import div#uploadstatus 
 	{
 	    padding:10px;
 	}
-	
 	
 		div#ezflickr-import div#uploadstatus div#uploadstatusbar
 		{
@@ -57,3 +64,14 @@ div#ezflickr-import
 	   clear:both;
 	   margin-top:20px;
 	}
+	
+div#ezflickr_image
+{
+    margin:5px;
+    text-align:center;
+}
+	
+div#ezflickr_image_description
+{
+    margin:5px;
+}

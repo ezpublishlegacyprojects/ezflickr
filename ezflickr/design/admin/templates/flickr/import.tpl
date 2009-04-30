@@ -59,6 +59,7 @@ function FlickrImport()
         if (o.responseText!=="ok")
         {
             flImport.failures++;
+            window.alert(o.responseText);
         }
         flImport.updateCount();
 	}
@@ -123,6 +124,22 @@ var flImport = new FlickrImport();
 		{else}
 		<p class="error">{"Please select a placement before importing"|i18n("flickr/main")}</p>
 		{/if}
+		
+		
+		<p>
+		  <label for="importphotoclass">{"New images will be created as:"|i18n("flickr/main")} </label>
+		  {def 
+		      $availablePhotoClasses=ezini('Import','photoAvailableClasses','ezflickr.ini')
+		      $selectedPhotoClass=ezini('Import','photoDefaultClass','ezflickr.ini')
+		      $prefPhotoClass=ezpreference('flickr_import_class_photo')
+		  }
+		  {if $prefPhotoClass}{set $selectedPhotoClass=$prefPhotoClass}{/if}
+		  <select name="importphotoclass" id="importphotoclass" onChange="window.location='{"/user/preferences/set/flickr_import_class_photo"|ezurl(no)}/'+this.value">
+		      {foreach $availablePhotoClasses as $photoClass}
+		          <option value="{$photoClass}" {if $photoClass|eq($prefPhotoClass)}selected="selected"{/if}>{fetch('content','class',hash('class_id',$photoClass)).name}</option>
+		      {/foreach}
+		  </select>
+		</p>
         
 	    <div id="uploadstatus">
 	        <div  id="uploadstatusbar">

@@ -5,7 +5,7 @@
         $number_of_items=min( $item_type, 3)|choose( 10, 10, 20, 30 )
         $children=fetch('flickr','photosets')}
 
-{include uri='design:flickr/list.tpl' list_title="Photosets (%count elements)"|i18n("flickr/main","",hash("%count",$children|count()))}
+{include uri='design:flickr/list.tpl' list_title="Photosets (%count)"|i18n("flickr/main","",hash("%count",$children|count()))}
 
 {include uri='design:flickr/bottom.tpl'}
 </form>

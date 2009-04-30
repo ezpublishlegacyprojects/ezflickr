@@ -9,7 +9,7 @@ class eZFlickrSelection extends eZPersistentObject
      * @param array $row database row
      * @return ezFlickrSelection
      */
-    function ezFlickrSelection( $row )
+    function eZFlickrSelection( $row )
     {
         $this->eZPersistentObject( $row );
     }
@@ -35,7 +35,7 @@ class eZFlickrSelection extends eZPersistentObject
                       "keys" => array( "id" ),
                       "function_attributes" => array( "flickr_element" => "flickrElement" ),
                       "increment_key" => "id",
-                      "class_name" => "ezFlickrSelection",
+                      "class_name" => "eZFlickrSelection",
                       "sort" => array( "id" => "asc" ),
                       "name" => "ezflickrselection" );
 

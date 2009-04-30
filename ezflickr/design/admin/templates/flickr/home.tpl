@@ -17,7 +17,7 @@
         $page_count=$result.pages
         $page_uri="flickr/home"
 }
-{include uri='design:flickr/list.tpl' list_title="Recently Updated (%count elements)"|i18n("flickr/main","",hash("%count",$children_count))}
+{include uri='design:flickr/list.tpl' list_title="Recently Updated (%count)"|i18n("flickr/main","",hash("%count",$children_count))}
 
 {include uri='design:flickr/bottom.tpl'}
 

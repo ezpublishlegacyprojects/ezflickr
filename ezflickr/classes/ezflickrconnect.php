@@ -159,7 +159,7 @@ class eZFlickrConnect {
             {
                 $this->setFlickrAuth(new eZFlickrAuth($result["auth"]));
             } else {
-                die('impossible de se connecter');
+                //we still don't have the authentification
             }
 
         }
@@ -203,7 +203,7 @@ class eZFlickrConnect {
     function getAuthetificationURL()
     {
         //Get a new frob
-        $callResult = $this->callMethod(self::METHOD_AUTH_GETFROB,array(),false);
+        $callResult = $this->callMethod(self::METHOD_AUTH_GETFROB,array(),true);
 
         if (!isset($callResult["frob"])) {
             throw new eZFlickrException();
