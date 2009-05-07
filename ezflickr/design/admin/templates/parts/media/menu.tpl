@@ -55,6 +55,7 @@
 	    <li><a href={'flickr/home/'|ezurl} title="{'eZFlickr Home'|i18n( 'design/admin/flickr/menu' )}">{'Home'|i18n( 'design/admin/flickr/menu' )}</a></li>
 	    <li><a href={'flickr/photosets/'|ezurl} title="{'Flickr Photosets'|i18n( 'design/admin/flickr/menu' )}">{'Photosets'|i18n( 'design/admin/flickr/menu' )}</a></li>
 	    <li><a href={'flickr/selection/'|ezurl} title="{'Current Selection'|i18n( 'design/admin/flickr/menu' )}">{'Selection'|i18n( 'design/admin/flickr/menu' )}</a></li>
+	    <li><a href={'flickr/logout/'|ezurl} title="{'Logout from eZ Flickr'|i18n( 'design/admin/flickr/menu' )}">{'Logout'|i18n( 'design/admin/flickr/menu' )}</a></li>
 	</ul>
 	{* DESIGN: Content END *}</div></div></div></div></div></div>
 

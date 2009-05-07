@@ -34,6 +34,13 @@ $ViewList = array();
  */
 $ViewList['connect']    = array(    'script' => 'connect.php',
                                     'default_navigation_part' => 'ezmedianavigationpart' );
+/*
+ * Logout from Flickr
+ */
+$ViewList['logout']    = array(    'script' => 'logout.php',
+                                    'default_navigation_part' => 'ezmedianavigationpart' );
+
+
 
 /*
  * Home
